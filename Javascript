@@ -1,0 +1,339 @@
+
+const vehicles = [
+    {
+        id: 1,
+        name: "Cafe Racer",
+        type: "Motorcycle",
+        price: 800,
+        available: true
+    },
+    {
+        id: 2,
+        name: "Honda Civic",
+        type: "Car",
+        price: 2500,
+        available: true
+    },
+    {
+        id: 3,
+        name: "Nissan Terra",
+        type: "SUV",
+        price: 3500,
+        available: true
+    },
+    {
+        id: 4,
+        name: "Ford Ranger",
+        type: "Pickup",
+        price: 3000,
+        available: true
+    },
+    {
+        id: 5,
+        name: "Mitsubishi Xpander",
+        type: "MPV",
+        price: 2800,
+        available: true
+    },
+    {
+        id: 6,
+        name: "Honda Click",
+        type: "Motorcycle",
+        price: 500,
+        available: true
+    }
+];
+
+let rentals = [];
+
+const loginPage = document.getElementById("loginPage");
+const app = document.getElementById("app");
+const loginForm = document.getElementById("loginForm");
+const loginMessage = document.getElementById("loginMessage");
+const vehicleList = document.getElementById("vehicleList");
+const vehicleSelect = document.getElementById("vehicleSelect");
+const rentalForm = document.getElementById("rentalForm");
+const rentalRecords = document.getElementById("rentalRecords");
+
+/* Login */
+loginForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (username === "admin" && password === "admin123") {
+        loginPage.classList.add("hidden");
+        app.classList.remove("hidden");
+
+        renderVehicles();
+        updateDashboard();
+        renderRecords();
+    } else {
+        loginMessage.textContent = "Invalid username or password.";
+    }
+});
+
+/* Logout */
+function logout() {
+    app.classList.add("hidden");
+    loginPage.classList.remove("hidden");
+    loginForm.reset();
+    loginMessage.textContent = "";
+}
+
+/* Navigation */
+function showSection(sectionId) {
+    document.querySelectorAll(".page-section").forEach(function (section) {
+        section.classList.add("hidden");
+    });
+
+    document.getElementById(sectionId).classList.remove("hidden");
+
+    const titles = {
+        dashboard: "Dashboard",
+        vehicles: "Vehicles",
+        rent: "Rent a Vehicle",
+        records: "Rental Records"
+    };
+
+    document.getElementById("pageTitle").textContent =
+        titles[sectionId] || "RENTGO";
+}
+
+/* Display Vehicles */
+function renderVehicles() {
+    vehicleList.innerHTML = "";
+
+    vehicles.forEach(function (vehicle) {
+        const card = document.createElement("div");
+        card.className = "vehicle-card";
+
+        card.innerHTML = `
+            <h3>${vehicle.name}</h3>
+            <p>Type: ${vehicle.type}</p>
+            <p class="price">₱${vehicle.price.toLocaleString()} / day</p>
+            <span class="status ${vehicle.available ? "" : "rented"}">
+                ${vehicle.available ? "Available" : "Rented"}
+            </span>
+        `;
+
+        vehicleList.appendChild(card);
+    });
+
+    renderVehicleOptions();
+}
+
+/* Vehicle Selection */
+function renderVehicleOptions() {
+    vehicleSelect.innerHTML = '<option value="">Select a vehicle</option>';
+
+    vehicles.forEach(function (vehicle) {
+        if (vehicle.available) {
+            const option = document.createElement("option");
+            option.value = vehicle.id;
+            option.textContent =
+                `${vehicle.name} - ₱${vehicle.price.toLocaleString()}/day`;
+
+            vehicleSelect.appendChild(option);
+        }
+    });
+}
+
+/* Rental Form */
+rentalForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const customerName =
+        document.getElementById("customerName").value.trim();
+
+    const customerAge =
+        Number(document.getElementById("customerAge").value);
+
+    const customerContact =
+        document.getElementById("customerContact").value.trim();
+
+    const customerAddress =
+        document.getElementById("customerAddress").value.trim();
+
+    const vehicleId = Number(vehicleSelect.value);
+
+    const pickupDate =
+        document.getElementById("pickupDate").value;
+
+    const days =
+        Number(document.getElementById("rentalDays").value);
+
+    const vehicle = vehicles.find(function (item) {
+        return item.id === vehicleId;
+    });
+
+    if (!vehicle || !vehicle.available) {
+        alert("Please select an available vehicle.");
+        return;
+    }
+
+    if (customerAge < 18) {
+        alert("The customer must be at least 18 years old.");
+        return;
+    }
+
+    if (days < 1 || !Number.isInteger(days)) {
+        alert("Please enter a valid number of rental days.");
+        return;
+    }
+
+    if (!pickupDate) {
+        alert("Please select a pickup date.");
+        return;
+    }
+
+    const selectedDate = new Date(pickupDate + "T00:00:00");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+        alert("Pickup date cannot be in the past.");
+        return;
+    }
+
+    const rental = {
+        id: Date.now(),
+        customerName: customerName,
+        customerAge: customerAge,
+        customerContact: customerContact,
+        customerAddress: customerAddress,
+        vehicleId: vehicle.id,
+        vehicleName: vehicle.name,
+        pickupDate: pickupDate,
+        days: days,
+        totalFee: vehicle.price * days,
+        status: "Rented"
+    };
+
+    rentals.push(rental);
+    vehicle.available = false;
+
+    alert(
+        "Rental confirmed!\n" +
+        "Customer: " + customerName + "\n" +
+        "Vehicle: " + vehicle.name + "\n" +
+        "Total Fee: ₱" + rental.totalFee.toLocaleString()
+    );
+
+    rentalForm.reset();
+    document.getElementById("rentalDays").value = 1;
+
+    renderVehicles();
+    renderRecords();
+    updateDashboard();
+    showSection("records");
+});
+
+/* Display Rental Records */
+function renderRecords() {
+    rentalRecords.innerHTML = "";
+
+    if (rentals.length === 0) {
+        rentalRecords.innerHTML = `
+            <tr>
+                <td colspan="7">No rental records available.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    rentals.forEach(function (rental) {
+        const row = document.createElement("tr");
+
+        const customerCell = document.createElement("td");
+        customerCell.textContent = rental.customerName;
+
+        const vehicleCell = document.createElement("td");
+        vehicleCell.textContent = rental.vehicleName;
+
+        const dateCell = document.createElement("td");
+        dateCell.textContent = rental.pickupDate;
+
+        const daysCell = document.createElement("td");
+        daysCell.textContent = rental.days;
+
+        const feeCell = document.createElement("td");
+        feeCell.textContent = "₱" + rental.totalFee.toLocaleString();
+
+        const statusCell = document.createElement("td");
+        statusCell.textContent = rental.status;
+
+        const actionCell = document.createElement("td");
+        const returnButton = document.createElement("button");
+
+        if (rental.status === "Rented") {
+            returnButton.textContent = "Return";
+            returnButton.addEventListener("click", function () {
+                returnVehicle(rental.id);
+            });
+
+            actionCell.appendChild(returnButton);
+        } else {
+            actionCell.textContent = "Completed";
+        }
+
+        row.append(
+            customerCell,
+            vehicleCell,
+            dateCell,
+            daysCell,
+            feeCell,
+            statusCell,
+            actionCell
+        );
+
+        rentalRecords.appendChild(row);
+    });
+}
+
+/* Return Vehicle */
+function returnVehicle(rentalId) {
+    const rental = rentals.find(function (item) {
+        return item.id === rentalId;
+    });
+
+    if (!rental || rental.status !== "Rented") {
+        return;
+    }
+
+    const vehicle = vehicles.find(function (item) {
+        return item.id === rental.vehicleId;
+    });
+
+    if (vehicle) {
+        vehicle.available = true;
+    }
+
+    rental.status = "Returned";
+
+    alert("Vehicle successfully returned.");
+
+    renderVehicles();
+    renderRecords();
+    updateDashboard();
+}
+
+/* Dashboard Statistics */
+function updateDashboard() {
+    document.getElementById("totalVehicles").textContent =
+        vehicles.length;
+
+    document.getElementById("availableVehicles").textContent =
+        vehicles.filter(function (vehicle) {
+            return vehicle.available;
+        }).length;
+
+    document.getElementById("totalRentals").textContent =
+        rentals.length;
+}
+
+/* Initial Setup */
+renderVehicles();
+renderRecords();
+updateDashboard();
