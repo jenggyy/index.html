@@ -1,0 +1,1215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RENTGO - Vehicle Rental Management System</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+:root {
+    --navy: #294768;
+    --blue: #008fe5;
+    --background: #f2f3f8;
+    --white: #ffffff;
+    --text: #202633;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* LOGIN PAGE */
+#loginPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+.login-card {
+    background: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 900px;
+    width: 100%;
+    min-height: 480px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px #172b441a;
+}
+
+.login-banner {
+    background: #06477d;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.brand {
+    font-size: 27px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.login-banner p {
+    margin-top: 12px;
+    line-height: 1.6;
+}
+
+.login-form {
+    padding: 45px 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-form h2 {
+    font-size: 23px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #7c8491;
+    font-size: 12px;
+    margin-bottom: 28px;
+}
+
+.field {
+    margin-bottom: 17px;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.field input, .field select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d9dce3;
+    border-radius: 5px;
+    outline-color: var(--blue);
+    background: white;
+}
+
+.primary-btn {
+    padding: 11px 18px;
+    background: var(--blue);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.primary-btn:hover {
+    background: #0076c1;
+}
+
+.login-form .primary-btn {
+    width: 100%;
+    background: var(--navy);
+}
+
+.switch-text {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 20px;
+    color: #747b88;
+}
+
+.switch-text a {
+    color: var(--blue);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* MAIN APPLICATION */
+#app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 205px;
+    flex-shrink: 0;
+    background: var(--navy);
+    color: white;
+    padding: 24px 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-brand {
+    padding: 0 10px 28px;
+}
+
+.sidebar-brand h2 {
+    font-size: 21px;
+}
+
+.sidebar-brand small {
+    font-size: 9px;
+    color: #d6e1ed;
+}
+
+.nav-btn {
+    width: 100%;
+    text-align: left;
+    color: #e5edf7;
+    background: transparent;
+    border-radius: 18px;
+    padding: 12px 13px;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background: var(--blue);
+    color: white;
+}
+
+.logout {
+    margin-top: auto;
+    color: white;
+    background: transparent;
+    text-align: left;
+    padding: 14px 12px;
+    font-size: 12px;
+}
+
+.main {
+    flex: 1;
+    min-width: 0;
+    padding: 24px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.topbar h2 {
+    font-size: 21px;
+}
+
+.topbar p {
+    color: #858b97;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.user {
+    background: white;
+    border-radius: 25px;
+    padding: 10px 14px;
+    font-size: 12px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.stat-card, .panel {
+    background: white;
+    border-radius: 10px;
+    padding: 18px;
+}
+
+.stat-card small {
+    color: #7e8591;
+    font-size: 11px;
+}
+
+.stat-card h2 {
+    font-size: 24px;
+    margin-top: 12px;
+}
+
+.stat-icon {
+    float: right;
+    font-size: 19px;
+}
+
+.panel {
+    margin-bottom: 20px;
+}
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.panel-heading h3 {
+    font-size: 15px;
+}
+
+.vehicle-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.vehicle-card {
+    border: 1px solid #eeeeF2;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.vehicle-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    background: #eee;
+}
+
+.vehicle-info {
+    padding: 10px;
+}
+
+.vehicle-info h4 {
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.vehicle-info p {
+    font-size: 10px;
+    color: #858b97;
+    margin-bottom: 7px;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 12px;
+    background: #d6f8e6;
+    color: #16834c;
+    font-size: 10px;
+}
+
+.status.rented {
+    background: #ffe1e1;
+    color: #bd3939;
+}
+
+.status.maintenance {
+    background: #fff0c9;
+    color: #966800;
+}
+
+/* TABLES */
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+    text-align: left;
+}
+
+th, td {
+    padding: 13px 10px;
+    border-bottom: 1px solid #eceef2;
+    white-space: nowrap;
+}
+
+th {
+    background: #f7f8fb;
+    color: #667080;
+    font-size: 11px;
+}
+
+td img {
+    width: 65px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 5px;
+    vertical-align: middle;
+}
+
+.small-btn {
+    background: #e5f3ff;
+    color: #0077c8;
+    border-radius: 5px;
+    padding: 7px 10px;
+    font-size: 11px;
+}
+
+.danger-btn {
+    background: #ffeded;
+    color: #bd3939;
+    border-radius: 5px;
+    padding: 7px 10px;
+    font-size: 11px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-grid .field {
+    margin-bottom: 5px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.total-box {
+    background: #edf6ff;
+    border-radius: 8px;
+    padding: 17px;
+    margin: 18px 0;
+}
+
+.total-box h2 {
+    color: var(--navy);
+    margin-top: 8px;
+}
+
+.empty {
+    color: #818896;
+    text-align: center;
+    padding: 25px;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 175px;
+    }
+
+    .main {
+        padding: 17px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .vehicle-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    #app {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .sidebar-brand {
+        padding: 5px 8px 12px;
+    }
+
+    .sidebar nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+
+    .nav-btn {
+        margin: 0;
+    }
+
+    .logout {
+        margin-top: 10px;
+    }
+
+    .main {
+        padding: 14px;
+    }
+
+    .login-card {
+        grid-template-columns: 1fr;
+    }
+
+    .login-banner {
+        min-height: 190px;
+    }
+
+    .login-form {
+        padding: 28px 22px;
+    }
+
+    .stats {
+        gap: 8px;
+    }
+
+    .stat-card {
+        padding: 13px;
+    }
+
+    .vehicle-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN AND SIGN UP -->
+<section id="loginPage">
+    <div class="login-card">
+        <div class="login-banner">
+            <h1 class="brand">RENTGO</h1>
+            <p>Vehicle Rental Management System</p>
+            <br>
+            <h3>Drive Your Dream</h3>
+            <p>Rent a vehicle. Enjoy the journey.</p>
+        </div>
+
+        <div class="login-form" id="loginForm">
+            <h2>SIGN IN</h2>
+            <p class="subtitle">Login to your account to continue</p>
+
+            <form id="signIn">
+                <div class="field">
+                    <label for="loginUsername">Username</label>
+                    <input id="loginUsername" required
+                           placeholder="Enter your username">
+                </div>
+
+                <div class="field">
+                    <label for="loginPassword">Password</label>
+                    <input id="loginPassword" type="password"
+                           required placeholder="Enter your password">
+                </div>
+
+                <button class="primary-btn" type="submit">Login</button>
+            </form>
+
+            <p class="switch-text">
+                Don't have an account?
+                <a onclick="showSignup()">Create now</a>
+            </p>
+        </div>
+
+        <div class="login-form hidden" id="signupForm">
+            <h2>SIGN UP</h2>
+            <p class="subtitle">Create your RENTGO account</p>
+
+            <form id="register">
+                <div class="field">
+                    <label for="newName">Full Name</label>
+                    <input id="newName" required placeholder="Full name">
+                </div>
+
+                <div class="field">
+                    <label for="newUsername">Username</label>
+                    <input id="newUsername" required placeholder="Username">
+                </div>
+
+                <div class="field">
+                    <label for="newPassword">Password</label>
+                    <input id="newPassword" type="password"
+                           minlength="4" required placeholder="Password">
+                </div>
+
+                <button class="primary-btn" type="submit">
+                    Create Account
+                </button>
+            </form>
+
+            <p class="switch-text">
+                Already have an account?
+                <a onclick="showLogin()">Login</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- APPLICATION -->
+<div id="app" class="hidden">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2>🚘 RENTGO</h2>
+            <small>Vehicle Rental System</small>
+        </div>
+
+        <nav>
+            <button class="nav-btn active"
+                    onclick="navigate('dashboard',this)">▦ Dashboard</button>
+            <button class="nav-btn"
+                    onclick="navigate('vehicles',this)">🚘 Vehicles</button>
+            <button class="nav-btn"
+                    onclick="navigate('rent',this)">▣ Rent a Vehicle</button>
+            <button class="nav-btn"
+                    onclick="navigate('records',this)">▤ Rental Records</button>
+        </nav>
+
+        <button class="logout" onclick="logout()">⇥ Logout</button>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <h2 id="pageTitle">DASHBOARD</h2>
+                <p id="pageSubtitle">Overview of your rental business</p>
+            </div>
+            <div class="user">👤 <span id="userName">Admin</span></div>
+        </header>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active">
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-icon">🚘</span>
+                    <small>Total Vehicles</small>
+                    <h2 id="totalVehicles">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🟢</span>
+                    <small>Available</small>
+                    <h2 id="availableVehicles">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🔵</span>
+                    <small>Rented</small>
+                    <h2 id="rentedVehicles">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">💰</span>
+                    <small>Total Rentals</small>
+                    <h2 id="totalRentals">0</h2>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Available Vehicles</h3>
+                    <button class="small-btn"
+                            onclick="navigateByName('vehicles')">View All</button>
+                </div>
+                <div id="dashboardVehicles" class="vehicle-grid"></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Recent Rental Records</h3>
+                    <button class="small-btn"
+                            onclick="navigateByName('records')">View All</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Vehicle</th>
+                                <th>Pick-up Date</th>
+                                <th>Return Date</th>
+                                <th>Total Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentRecords"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VEHICLE MANAGEMENT -->
+        <section id="vehicles" class="page">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Vehicle Management</h3>
+                    <button class="primary-btn" onclick="addVehicle()">
+                        + Add Vehicle
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Vehicle Name</th>
+                                <th>Type</th>
+                                <th>Plate Number</th>
+                                <th>Rate/Day</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehicleTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- RENT A VEHICLE -->
+        <section id="rent" class="page">
+            <div class="panel">
+                <h3 style="margin-bottom:18px">Rent a Vehicle</h3>
+                <p class="subtitle">Fill in the details to rent a vehicle.</p>
+
+                <form id="rentalForm">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="customerName">Customer Name</label>
+                            <input id="customerName" required placeholder="Full name">
+                        </div>
+
+                        <div class="field">
+                            <label for="customerAge">Age</label>
+                            <input id="customerAge" type="number"
+                                   min="18" required placeholder="Age">
+                        </div>
+
+                        <div class="field">
+                            <label for="customerContact">Contact Number</label>
+                            <input id="customerContact" required
+                                   placeholder="Contact number">
+                        </div>
+
+                        <div class="field">
+                            <label for="customerAddress">Address</label>
+                            <input id="customerAddress" required
+                                   placeholder="Complete address">
+                        </div>
+
+                        <div class="field full">
+                            <label for="vehicleSelect">Select Vehicle</label>
+                            <select id="vehicleSelect" required></select>
+                        </div>
+
+                        <div class="field">
+                            <label for="pickupDate">Pick-up Date</label>
+                            <input id="pickupDate" type="date" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="returnDate">Return Date</label>
+                            <input id="returnDate" type="date" required>
+                        </div>
+                    </div>
+
+                    <div class="total-box">
+                        <small>Estimated Total Rental Fee</small>
+                        <h2 id="rentalTotal">₱0.00</h2>
+                        <small id="rentalDays">Select a vehicle and dates.</small>
+                    </div>
+
+                    <button type="submit" class="primary-btn">
+                        Confirm Rental
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- RENTAL RECORDS -->
+        <section id="records" class="page">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Rental Records</h3>
+                    <button class="small-btn" onclick="renderAll()">Refresh</button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Customer Name</th>
+                                <th>Vehicle</th>
+                                <th>Pick-up Date</th>
+                                <th>Return Date</th>
+                                <th>Total Fee</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+const imageCar =
+"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=500&q=80";
+
+const imageVan =
+"https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=500&q=80";
+
+const imageMotor =
+"https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=500&q=80";
+
+let vehicles = [
+    {
+        id: 1,
+        name: "Mitsubishi Xpander",
+        type: "MPV",
+        plate: "DEF 5678",
+        rate: 2200,
+        status: "Available",
+        image: imageVan
+    },
+    {
+        id: 2,
+        name: "Cafe Racer",
+        type: "Motorcycle",
+        plate: "GHI 9012",
+        rate: 700,
+        status: "Available",
+        image: imageMotor
+    },
+    {
+        id: 3,
+        name: "Toyota Hiace",
+        type: "Van",
+        plate: "JKL 3456",
+        rate: 3000,
+        status: "Available",
+        image: imageVan
+    },
+    {
+        id: 4,
+        name: "Nissan Terra",
+        type: "Car",
+        plate: "MNO 7890",
+        rate: 2000,
+        status: "Rented",
+        image: imageCar
+    }
+];
+
+let rentals = [];
+let currentUser = "Admin";
+
+function showSignup() {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("signupForm").classList.remove("hidden");
+}
+
+function showLogin() {
+    document.getElementById("signupForm").classList.add("hidden");
+    document.getElementById("loginForm").classList.remove("hidden");
+}
+
+document.getElementById("register").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById("newUsername").value.trim();
+    const password = document.getElementById("newPassword").value;
+    const name = document.getElementById("newName").value.trim();
+
+    if (localStorage.getItem("rentgo_" + username)) {
+        alert("Username already exists.");
+        return;
+    }
+
+    localStorage.setItem("rentgo_" + username, JSON.stringify({
+        name: name,
+        password: password
+    }));
+
+    alert("Account created! You can now log in.");
+    this.reset();
+    showLogin();
+});
+
+document.getElementById("signIn").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    if (username === "admin" && password === "admin123") {
+        currentUser = "Admin";
+        enterApp();
+        return;
+    }
+
+    const account = localStorage.getItem("rentgo_" + username);
+
+    if (!account || JSON.parse(account).password !== password) {
+        alert("Incorrect username or password.");
+        return;
+    }
+
+    currentUser = JSON.parse(account).name;
+    enterApp();
+});
+
+function enterApp() {
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    document.getElementById("userName").textContent = currentUser;
+    renderAll();
+}
+
+function logout() {
+    document.getElementById("app").classList.add("hidden");
+    document.getElementById("loginPage").classList.remove("hidden");
+    document.getElementById("signIn").reset();
+}
+
+const pageInfo = {
+    dashboard: ["DASHBOARD", "Overview of your rental business"],
+    vehicles: ["VEHICLES", "Manage your vehicle inventory and rental rates"],
+    rent: ["RENT A VEHICLE", "Enter customer and rental information"],
+    records: ["RENTAL RECORDS", "View and manage all rental transactions"]
+};
+
+function navigate(page, button) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(page).classList.add("active");
+
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    if (button) button.classList.add("active");
+
+    document.getElementById("pageTitle").textContent = pageInfo[page][0];
+    document.getElementById("pageSubtitle").textContent = pageInfo[page][1];
+
+    renderAll();
+}
+
+function navigateByName(page) {
+    const buttons = document.querySelectorAll(".nav-btn");
+    const names = ["dashboard", "vehicles", "rent", "records"];
+    navigate(page, buttons[names.indexOf(page)]);
+}
+
+function money(amount) {
+    return "₱" + Number(amount).toLocaleString("en-PH", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function statusHTML(status) {
+    const extra = status === "Rented" ? "rented" :
+                  status === "Maintenance" ? "maintenance" : "";
+
+    return `<span class="status ${extra}">${status}</span>`;
+}
+
+function vehicleCard(v) {
+    return `
+        <div class="vehicle-card">
+            <img src="${v.image}" alt="${v.name}">
+            <div class="vehicle-info">
+                <h4>${v.name}</h4>
+                <p>${v.type} · ${money(v.rate)}/day</p>
+                ${statusHTML(v.status)}
+            </div>
+        </div>`;
+}
+
+function renderAll() {
+    const available = vehicles.filter(v => v.status === "Available").length;
+    const rented = vehicles.filter(v => v.status === "Rented").length;
+
+    document.getElementById("totalVehicles").textContent = vehicles.length;
+    document.getElementById("availableVehicles").textContent = available;
+    document.getElementById("rentedVehicles").textContent = rented;
+    document.getElementById("totalRentals").textContent = rentals.length;
+
+    document.getElementById("dashboardVehicles").innerHTML =
+        vehicles.filter(v => v.status === "Available")
+        .slice(0, 4).map(vehicleCard).join("") ||
+        '<p class="empty">No available vehicles.</p>';
+
+    document.getElementById("vehicleTable").innerHTML =
+        vehicles.map(v => `
+        <tr>
+            <td><img src="${v.image}" alt="${v.name}"></td>
+            <td>${v.name}</td>
+            <td>${v.type}</td>
+            <td>${v.plate}</td>
+            <td>${money(v.rate)}</td>
+            <td>${statusHTML(v.status)}</td>
+            <td>
+                <button class="small-btn" onclick="editVehicle(${v.id})">Edit</button>
+                <button class="danger-btn" onclick="deleteVehicle(${v.id})">Delete</button>
+            </td>
+        </tr>`).join("") ||
+        '<tr><td colspan="7" class="empty">No vehicles available.</td></tr>';
+
+    document.getElementById("vehicleSelect").innerHTML =
+        '<option value="">Choose a vehicle</option>' +
+        vehicles.filter(v => v.status === "Available")
+        .map(v => `<option value="${v.id}">${v.name} — ${money(v.rate)}/day</option>`)
+        .join("");
+
+    document.getElementById("recordsTable").innerHTML =
+        rentals.map((r, i) => `
+        <tr>
+            <td>${i + 1}</td>
+            <td>${r.customer}</td>
+            <td>${r.vehicle}</td>
+            <td>${r.pickup}</td>
+            <td>${r.returnDate}</td>
+            <td>${money(r.total)}</td>
+            <td>${statusHTML(r.status)}</td>
+        </tr>`).join("") ||
+        '<tr><td colspan="7" class="empty">No rental records yet.</td></tr>';
+
+    document.getElementById("recentRecords").innerHTML =
+        rentals.slice(-3).reverse().map(r => `
+        <tr>
+            <td>${r.customer}</td>
+            <td>${r.vehicle}</td>
+            <td>${r.pickup}</td>
+            <td>${r.returnDate}</td>
+            <td>${money(r.total)}</td>
+        </tr>`).join("") ||
+        '<tr><td colspan="5" class="empty">No recent rentals.</td></tr>';
+
+    calculateTotal();
+}
+
+function addVehicle() {
+    const name = prompt("Enter vehicle name:");
+    if (!name || !name.trim()) return;
+
+    const type = prompt("Enter type (Car, Van, Motorcycle):", "Car");
+    if (!type) return;
+
+    const plate = prompt("Enter plate number:");
+    if (!plate) return;
+
+    const rateInput = prompt("Enter rental rate per day:", "1500");
+    if (rateInput === null) return;
+
+    const rate = Number(rateInput);
+
+    if (!Number.isFinite(rate) || rate <= 0) {
+        alert("Enter a valid rental rate.");
+        return;
+    }
+
+    const image = type.toLowerCase().includes("motor") ? imageMotor :
+                  type.toLowerCase().includes("van") ? imageVan : imageCar;
+
+    vehicles.push({
+        id: Date.now(),
+        name: name.trim(),
+        type: type.trim(),
+        plate: plate.trim(),
+        rate: rate,
+        status: "Available",
+        image: image
+    });
+
+    renderAll();
+}
+
+function editVehicle(id) {
+    const v = vehicles.find(v => v.id === id);
+    if (!v) return;
+
+    const rate = prompt("New daily rental rate:", v.rate);
+    if (rate === null) return;
+
+    const parsedRate = Number(rate);
+
+    if (!Number.isFinite(parsedRate) || parsedRate <= 0) {
+        alert("Enter a valid rate.");
+        return;
+    }
+
+    v.rate = parsedRate;
+
+    const status = prompt(
+        "Enter status: Available, Rented, or Maintenance",
+        v.status
+    );
+
+    if (status) {
+        const normalized = status.trim().toLowerCase();
+
+        const allowed = {
+            available: "Available",
+            rented: "Rented",
+            maintenance: "Maintenance"
+        };
+
+        if (allowed[normalized]) {
+            v.status = allowed[normalized];
+        } else {
+            alert("Invalid status. The previous status was kept.");
+        }
+    }
+
+    renderAll();
+}
+
+function deleteVehicle(id) {
+    const v = vehicles.find(v => v.id === id);
+    if (!v) return;
+
+    if (v.status === "Rented") {
+        alert("This vehicle is rented. Update its status before deleting.");
+        return;
+    }
+
+    if (confirm("Delete " + v.name + "?")) {
+        vehicles = vehicles.filter(v => v.id !== id);
+        renderAll();
+    }
+}
+
+function calculateTotal() {
+    const id = Number(document.getElementById("vehicleSelect").value);
+    const pickup = document.getElementById("pickupDate").value;
+    const returnDate = document.getElementById("returnDate").value;
+
+    const vehicle = vehicles.find(v => v.id === id);
+    const start = new Date(pickup + "T00:00:00");
+    const end = new Date(returnDate + "T00:00:00");
+
+    if (!vehicle || !pickup || !returnDate ||
+        !Number.isFinite(start.getTime()) ||
+        !Number.isFinite(end.getTime()) || end <= start) {
+
+        document.getElementById("rentalTotal").textContent = money(0);
+        document.getElementById("rentalDays").textContent =
+            "Choose a vehicle and a valid return date.";
+
+        return 0;
+    }
+
+    const days = Math.round((end - start) / 86400000);
+    const total = days * vehicle.rate;
+
+    document.getElementById("rentalTotal").textContent = money(total);
+    document.getElementById("rentalDays").textContent =
+        days + (days === 1 ? " rental day" : " rental days");
+
+    return total;
+}
+
+["vehicleSelect", "pickupDate", "returnDate"].forEach(id => {
+    document.getElementById(id).addEventListener("change", calculateTotal);
+});
+
+document.getElementById("rentalForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const customer = document.getElementById("customerName").value.trim();
+    const age = Number(document.getElementById("customerAge").value);
+    const contact = document.getElementById("customerContact").value.trim();
+    const address = document.getElementById("customerAddress").value.trim();
+    const vehicleId = Number(document.getElementById("vehicleSelect").value);
+    const pickup = document.getElementById("pickupDate").value;
+    const returnDate = document.getElementById("returnDate").value;
+
+    const vehicle = vehicles.find(v => v.id === vehicleId);
+
+    if (!vehicle || vehicle.status !== "Available") {
+        alert("Please select an available vehicle.");
+        return;
+    }
+
+    if (age < 18) {
+        alert("The customer must be at least 18 years old.");
+        return;
+    }
+
+    if (!customer || !contact || !address) {
+        alert("Please complete all customer information.");
+        return;
+    }
+
+    const total = calculateTotal();
+
+    if (!pickup || !returnDate || total <= 0) {
+        alert("Please select valid rental dates.");
+        return;
+    }
+
+    rentals.push({
+        customer: customer,
+        age: age,
+        contact: contact,
+        address: address,
+        vehicle: vehicle.name,
+        vehicleId: vehicle.id,
+        pickup: pickup,
+        returnDate: returnDate,
+        total: total,
+        status: "Booked"
+    });
+
+    vehicle.status = "Rented";
+
+    alert("Rental confirmed successfully!");
+
+    this.reset();
+    renderAll();
+    navigateByName("records");
+});
+
+renderAll();
+</script>
+
+</body>
+</html>
