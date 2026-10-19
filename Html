@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RENTGO | Vehicle Rental Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <h1>🚗 RENTGO</h1>
+            <p>Vehicle Rental Management System</p>
+
+            <form id="loginForm">
+                <label for="username">Username</label>
+                <input id="username" type="text" placeholder="Enter username" required>
+
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Enter password" required>
+
+                <button type="submit">Login</button>
+                <p id="loginMessage"></p>
+            </form>
+
+            <small>Demo: admin / admin123</small>
+        </div>
+    </div>
+
+    <div id="app" class="hidden">
+        <aside class="sidebar">
+            <h2>🚗 RENTGO</h2>
+            <p>Vehicle Rental System</p>
+
+            <button onclick="showSection('dashboard')">Dashboard</button>
+            <button onclick="showSection('vehicles')">Vehicles</button>
+            <button onclick="showSection('rent')">Rent a Vehicle</button>
+            <button onclick="showSection('records')">Rental Records</button>
+            <button onclick="logout()">Logout</button>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p>Welcome to RENTGO Management System</p>
+            </header>
+
+            <section id="dashboard" class="page-section">
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Total Vehicles</h3>
+                        <p id="totalVehicles">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Available Vehicles</h3>
+                        <p id="availableVehicles">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Rentals</h3>
+                        <p id="totalRentals">0</p>
+                    </div>
+                </div>
+
+                <h2>Welcome to RENTGO!</h2>
+                <p>Manage your vehicles, customers, and rental transactions in one place.</p>
+            </section>
+
+            <section id="vehicles" class="page-section hidden">
+                <h2>Vehicle List</h2>
+
+                <div id="vehicleList" class="vehicle-grid"></div>
+            </section>
+
+            <section id="rent" class="page-section hidden">
+                <h2>Rent a Vehicle</h2>
+
+                <form id="rentalForm" class="form-card">
+                    <label for="customerName">Customer Name</label>
+                    <input id="customerName" type="text" required>
+
+                    <label for="customerAge">Age</label>
+                    <input id="customerAge" type="number" min="18" required>
+
+                    <label for="customerContact">Contact Number</label>
+                    <input id="customerContact" type="tel" required>
+
+                    <label for="customerAddress">Address</label>
+                    <input id="customerAddress" type="text" required>
+
+                    <label for="vehicleSelect">Select Vehicle</label>
+                    <select id="vehicleSelect" required></select>
+
+                    <label for="pickupDate">Pickup Date</label>
+                    <input id="pickupDate" type="date" required>
+
+                    <label for="rentalDays">Number of Days</label>
+                    <input id="rentalDays" type="number" min="1" value="1" required>
+
+                    <button type="submit">Confirm Rental</button>
+                </form>
+            </section>
+
+            <section id="records" class="page-section hidden">
+                <h2>Rental Records</h2>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Vehicle</th>
+                                <th>Pickup Date</th>
+                                <th>Days</th>
+                                <th>Total Fee</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rentalRecords"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
